@@ -1,0 +1,235 @@
+type ValidationResult = 
+ record {
+   config: opt AppConfig;
+   errors: vec ValidationError;
+   is_valid: bool;
+   warnings: vec ValidationError;
+ };
+type ValidationError = 
+ record {
+   error_code: text;
+   field: opt text;
+   message: text;
+   severity: text;
+ };
+type UserFlow = 
+ record {
+   flow_name: text;
+   steps: vec text;
+ };
+type UiSchema = 
+ record {
+   navigation: vec text;
+   pages: vec UiPage;
+ };
+type UiPage = 
+ record {
+   auth_required: bool;
+   components: vec UiComponent;
+   layout: text;
+   page_name: text;
+   role: opt text;
+   route: text;
+ };
+type UiComponent = 
+ record {
+   component_type: text;
+   name: text;
+   props: vec text;
+ };
+type SystemDesignResult = 
+ record {
+   application_structure: vec text;
+   architecture_model: ArchitectureModel;
+   role_hierarchy: vec RoleHierarchyEntry;
+   user_flows: vec UserFlow;
+ };
+type SchemaGenerationResult = 
+ record {
+   api_schema: ApiSchema;
+   auth_schema: AuthSchema;
+   database_schema: DatabaseSchema;
+   ui_schema: UiSchema;
+ };
+type RoleHierarchyEntry = 
+ record {
+   parent_role: opt text;
+   permissions: vec text;
+   role_name: text;
+ };
+type Role = 
+ record {
+   name: text;
+   parent_role: opt text;
+   permissions: vec text;
+ };
+type RepairResult = 
+ record {
+   final_config: AppConfig;
+   is_valid: bool;
+   repairs_made: vec RepairAction;
+ };
+type RepairAction = 
+ record {
+   description: text;
+   field: text;
+   repair_type: text;
+ };
+type Relationship = 
+ record {
+   field: FieldName;
+   rel_type: text;
+   target: text;
+ };
+type RefinementResult = 
+ record {
+   changes_made: vec RefinementChange;
+   config: AppConfig;
+ };
+type RefinementChange = 
+ record {
+   affected_field: text;
+   change_type: text;
+   description: text;
+ };
+type Page = 
+ record {
+   auth_required: bool;
+   components: vec text;
+   name: text;
+   role: opt text;
+   route: text;
+ };
+type MetricsResult = 
+ record {
+   average_processing_time_ms: nat;
+   failure_types: vec FailureType;
+   repairs_made_total: nat;
+   successful_compilations: nat;
+   total_compilations: nat;
+   validation_errors_total: nat;
+ };
+type IntentExtractionResult = 
+ record {
+   apis: vec ApiEndpoint;
+   assumptions: vec text;
+   business_rules: vec BusinessRule;
+   entities: vec Entity;
+   pages: vec Page;
+   roles: vec Role;
+ };
+type FieldType = text;
+type FieldName = text;
+type FailureType = 
+ record {
+   count: nat;
+   type_name: text;
+ };
+type EntityField = 
+ record {
+   field_type: FieldType;
+   name: FieldName;
+   required: bool;
+   unique: bool;
+ };
+type Entity = 
+ record {
+   fields: vec EntityField;
+   name: text;
+   relationships: vec Relationship;
+ };
+type DeploymentReport = 
+ record {
+   checks: vec DeploymentCheck;
+   readiness_score: nat;
+   status: text;
+   warnings: vec text;
+ };
+type DeploymentCheck = 
+ record {
+   check_name: text;
+   detail: text;
+   passed: bool;
+ };
+type DbTable = 
+ record {
+   columns: vec DbColumn;
+   foreign_keys: vec text;
+   indexes: vec text;
+   name: text;
+ };
+type DbColumn = 
+ record {
+   col_type: text;
+   constraints: vec text;
+   name: text;
+ };
+type DatabaseSchema = record {tables: vec DbTable;};
+type CompileResult = 
+ record {
+   assumptions: vec text;
+   design: opt SystemDesignResult;
+   error_message: opt text;
+   final_config: opt AppConfig;
+   intent: opt IntentExtractionResult;
+   processing_time_ms: nat;
+   refinement: opt RefinementResult;
+   repair: opt RepairResult;
+   schemas: opt SchemaGenerationResult;
+   success: bool;
+   validation: opt ValidationResult;
+ };
+type BusinessRule = 
+ record {
+   action: text;
+   condition: text;
+   description: text;
+   rule_id: text;
+ };
+type AuthSchema = 
+ record {
+   protected_routes: vec text;
+   providers: vec text;
+   session_type: text;
+   strategy: text;
+ };
+type ArchitectureModel = 
+ record {
+   layers: vec ArchitectureLayer;
+   pattern: text;
+ };
+type ArchitectureLayer = 
+ record {
+   description: text;
+   name: text;
+ };
+type AppName = text;
+type AppConfig = 
+ record {
+   api: ApiSchema;
+   app_name: AppName;
+   auth: AuthSchema;
+   business_rules: vec BusinessRule;
+   database: DatabaseSchema;
+   entities: vec Entity;
+   pages: vec Page;
+   roles: vec Role;
+ };
+type ApiSchema = record {endpoints: vec ApiEndpoint;};
+type ApiEndpoint = 
+ record {
+   auth_required: bool;
+   method: text;
+   path: text;
+   request_body: opt text;
+   response_type: text;
+   role: opt text;
+ };
+service : {
+  compile: (prompt: text) -> (CompileResult);
+  execute: (config_json: text) -> (DeploymentReport);
+  getMetrics: () -> (MetricsResult) query;
+  repair: (config_json: text) -> (RepairResult);
+  runBenchmark: (prompt_index: nat) -> (CompileResult);
+  validate: (config_json: text) -> (ValidationResult);
+}

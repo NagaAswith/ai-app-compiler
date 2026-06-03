@@ -1,0 +1,35 @@
+// Version: 4.0.0
+type MetricsState__955868183 =
+  {
+    var failure_type_contradictory : Nat;
+    var failure_type_missing : Nat;
+    var failure_type_repair : Nat;
+    var failure_type_vague : Nat;
+    var failure_type_validation : Nat;
+    var repairs_made_total : Nat;
+    var successful_compilations : Nat;
+    var total_compilations : Nat;
+    var total_processing_time_ms : Nat;
+    var validation_errors_total : Nat
+  };
+type NewActor__1026915867 = {metricsState : MetricsState__955868183};
+type OldActor__307000526 = {};
+{
+  "20260603_000000_Init" :
+    (_old : OldActor__307000526) -> NewActor__1026915867
+}
+actor  {
+  stable metricsState :
+    {
+      var failure_type_contradictory : Nat;
+      var failure_type_missing : Nat;
+      var failure_type_repair : Nat;
+      var failure_type_vague : Nat;
+      var failure_type_validation : Nat;
+      var repairs_made_total : Nat;
+      var successful_compilations : Nat;
+      var total_compilations : Nat;
+      var total_processing_time_ms : Nat;
+      var validation_errors_total : Nat
+    }
+};

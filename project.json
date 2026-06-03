@@ -1,0 +1,25 @@
+{
+  "overview": "An AI App Compiler that converts natural language descriptions into fully validated application configurations through a 6-stage pipeline: intent extraction, system design, schema generation, refinement, validation, and repair.",
+  "features": [
+    "Natural language to app config pipeline",
+    "6-stage compiler: Intent Extraction, System Design, Schema Generation, Refinement, Validation, Repair",
+    "Cross-layer validation: UI-API, API-DB, Auth-Role consistency",
+    "Automatic repair engine for invalid configurations",
+    "Runtime execution simulator with deployment report",
+    "Evaluation dashboard with 20 realistic SaaS test prompts",
+    "Live pipeline visualization showing each stage output",
+    "JSON inspector for all stage outputs",
+    "Metrics tracking: success rate, validation errors, repair count, processing time"
+  ],
+  "category": "developer-tool",
+  "tags": [
+    "ai",
+    "code-generation",
+    "compiler",
+    "pipeline",
+    "developer-tools",
+    "schema",
+    "validation"
+  ],
+  "last_updated": "2026-06-03T18:44:33.286Z"
+}
